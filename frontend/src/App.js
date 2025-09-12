@@ -70,11 +70,11 @@ const generateEquations = (parametros, controlSimulacion) => {
       differential_eq = `${m}·y'' + ${b}·y' + ${k}·y = ${fuerza || 'F(t)'}`;
       differential_eq_latex = `${m}\\ddot{y} + ${b}\\dot{y} + ${k}y = ${fuerza || 'F(t)'}`;
   }
-  
+
   // Calculate system parameters
   const omega_n = Math.sqrt(k / m);
   const zeta = b / (2 * Math.sqrt(m * k));
-  
+
   // Generate solution equations (simplified representations)
   if (tipo_ecuacion.includes('no_amortiguado') && !tipo_ecuacion.includes('forzado')) {
     // Simple harmonic motion
@@ -101,7 +101,7 @@ const generateEquations = (parametros, controlSimulacion) => {
     acceleration_eq = `a(t) = \\frac{d^2}{dt^2}[y(t)]`;
     acceleration_eq_latex = `a(t) = \\frac{d^2}{dt^2}[y(t)]`;
   } else if (zeta === 1) {
-    // Criticamente amortiguado
+    // Críticamente amortiguado
     position_eq = `y(t) = (${y0.toFixed(2)} + ${(v0 + omega_n * y0).toFixed(2)}t)·e^(-${omega_n.toFixed(2)}t)`;
     position_eq_latex = `y(t) = (${y0.toFixed(2)} + ${(v0 + omega_n * y0).toFixed(2)}t)e^{-${omega_n.toFixed(2)}t}`;
     
@@ -115,7 +115,7 @@ const generateEquations = (parametros, controlSimulacion) => {
     const r1 = -zeta * omega_n + omega_n * Math.sqrt(zeta * zeta - 1);
     const r2 = -zeta * omega_n - omega_n * Math.sqrt(zeta * zeta - 1);
     
-    position_eq = `y(t) = C₁·e^(${r1.toFixed(2)}t) + C₂·e^(${r2.toFixed(2)}t)`;
+    position_eq = `y(t) = C_1·e^(${r1.toFixed(2)}t) + C_2·e^(${r2.toFixed(2)}t)`;
     position_eq_latex = `y(t) = C_1 e^{${r1.toFixed(2)}t} + C_2 e^{${r2.toFixed(2)}t}`;
     
     velocity_eq = `v(t) = \\frac{d}{dt}[y(t)]`;
@@ -124,6 +124,7 @@ const generateEquations = (parametros, controlSimulacion) => {
     acceleration_eq = `a(t) = \\frac{d^2}{dt^2}[y(t)]`;
     acceleration_eq_latex = `a(t) = \\frac{d^2}{dt^2}[y(t)]`;
   }
+
   
   return {
     differential_eq,
@@ -417,14 +418,14 @@ export default function SimuladorMasaResorte() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <h4 className="font-medium mb-2">Ecuación Diferencial General:</h4>
-                <p className="font-mono bg-white p-2 rounded border">m·y'' + b·y' + k·y = F(t)</p>
+                <p className="font-mono bg-white p-2 rounded border">mÂ·y'' + bÂ·y' + kÂ·y = F(t)</p>
               </div>
               <div>
                 <h4 className="font-medium mb-2">Parámetros:</h4>
                 <ul className="space-y-1">
                   <li><strong>m:</strong> Masa del sistema (kg)</li>
                   <li><strong>k:</strong> Constante del resorte (N/m)</li>
-                  <li><strong>b:</strong> Constante de amortiguamiento (N·s/m)</li>
+                  <li><strong>b:</strong> Constante de amortiguamiento (NÂ·s/m)</li>
                   <li><strong>F(t):</strong> Fuerza externa (función del tiempo)</li>
                 </ul>
               </div>
@@ -464,7 +465,7 @@ export default function SimuladorMasaResorte() {
                 <MathDisplay 
                   equation={equations.acceleration_eq} 
                   latex={equations.acceleration_eq_latex}
-                  label="Aceleración a(t) = d²y/dt²" 
+                  label="Aceleración a(t) = dÂ²y/dtÂ²" 
                 />
               )}
             </div>
@@ -607,7 +608,7 @@ export default function SimuladorMasaResorte() {
                       className="w-20 text-center border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       disabled={escalaGrafico.auto_escala}
                     />
-                    <span className="mx-2 text-gray-600 font-mono">≥ Y ≥</span>
+                    <span className="mx-2 text-gray-600 font-mono">≤ Y ≤</span>
                     <input
                       type="number"
                       step="0.1"
@@ -674,7 +675,7 @@ export default function SimuladorMasaResorte() {
             )}
           </div>
 
-          {/* Área de Resultados */}
+          {/* Ãrea de Resultados */}
           <div className="lg:col-span-2">
             {error && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
@@ -760,7 +761,7 @@ export default function SimuladorMasaResorte() {
                         </div>
                         <div className="flex justify-between">
                           <span>Amortiguamiento (b):</span>
-                          <span className="font-mono">{resultados.parametros.constante_amortiguamiento} N·s/m</span>
+                          <span className="font-mono">{resultados.parametros.constante_amortiguamiento} NÂ·s/m</span>
                         </div>
                         <div className="flex justify-between">
                           <span>Fuerza F(t):</span>
@@ -789,12 +790,12 @@ export default function SimuladorMasaResorte() {
                           <span className="font-mono">{resultados.parametros.tipo_amortiguamiento}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Período (T):</span>
+                          <span>Periodo (T):</span>
                           <span className="font-mono">{(2 * Math.PI / resultados.parametros.frecuencia_natural).toFixed(3)} s</span>
                         </div>
                         {resultados.parametros.coeficiente_amortiguamiento < 1 && (
                           <div className="flex justify-between">
-                            <span>Frecuencia amortiguada (ωd):</span>
+                            <span>Frecuencia amortiguada (Ï‰d):</span>
                             <span className="font-mono">
                               {(resultados.parametros.omega_0 * Math.sqrt(1 - Math.pow(resultados.parametros.coeficiente_amortiguamiento, 2))).toFixed(3)} rad/s
                             </span>
@@ -805,7 +806,7 @@ export default function SimuladorMasaResorte() {
                   </div>
                 </div>
 
-                {/* Estadísticas */}
+                {/* EstadÃ­sticas */}
                 <div className="bg-white rounded-lg shadow-md p-6">
                   <h3 className="text-lg font-semibold mb-4">Estadísticas de la Simulación</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -842,15 +843,15 @@ export default function SimuladorMasaResorte() {
                     </div>
 
                     <div>
-                      <h4 className="font-medium mb-3">Aceleración</h4>
+                      <h4 className="font-medium mb-3">AceleraciÃ³n</h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span>Máxima:</span>
-                          <span className="font-mono">{resultados.estadisticas.aceleracion_maxima.toFixed(4)} m/s²</span>
+                          <span className="font-mono">{resultados.estadisticas.aceleracion_maxima.toFixed(4)} m/sÂ²</span>
                         </div>
                         <div className="flex justify-between">
-                          <span>Mínima:</span>
-                          <span className="font-mono">{resultados.estadisticas.aceleracion_minima.toFixed(4)} m/s²</span>
+                          <span>Mí­nima:</span>
+                          <span className="font-mono">{resultados.estadisticas.aceleracion_minima.toFixed(4)} m/sÂ²</span>
                         </div>
                       </div>
                     </div>
