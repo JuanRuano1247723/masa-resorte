@@ -12,3 +12,11 @@ services:
           value: production
         - key: PORT
           value: 10000
+   - type: web
+    name: react-frontend
+    env: static
+    buildCommand: |
+      npm install
+      npm run build
+    staticPublishPath: build
+    plan: free
