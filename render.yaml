@@ -6,7 +6,6 @@ services:
       pip install --upgrade pip setuptools wheel
       pip install -r requirements.txt
     startCommand: gunicorn app:app
-    plan: free
     envVars:
       - key: FLASK_ENV
         value: production
@@ -20,4 +19,3 @@ services:
       npm install
       npm run build
     staticPublishPath: build
-    plan: free
