@@ -24,27 +24,48 @@ const SpringMassSimulation = ({ resultados, isPlaying, onPlayPause, onReset, onF
   );
   const scale = 80 / Math.max(maxAmplitude, 1); // Scale to fit in 80px range
 
+  // Update parent with current frame - moved to useEffect to avoid render loop
+  useEffect(() => {
+    if (onFrameUpdate) {
+      onFrameUpdate(currentFrame);
+    }
+  }, [currentFrame, onFrameUpdate]);
+
   useEffect(() => {
     if (!resultados || !isPlaying) return;
 
+    let lastTime = Date.now();
+    const targetFPS = 60;
+    const frameInterval = 1000 / targetFPS;
+
     const animate = () => {
-      setCurrentFrame(prevFrame => {
-        const nextFrame = prevFrame + animationSpeed;
-        if (nextFrame >= resultados.posicion.length) {
-          onPlayPause(); // Auto-pause when animation completes
-          return resultados.posicion.length - 1;
-        }
-        if (onFrameUpdate) {
-          onFrameUpdate(nextFrame);
-        }
-        return nextFrame;
-      });
+      const now = Date.now();
+      const deltaTime = now - lastTime;
+      
+      if (deltaTime >= frameInterval) {
+        setCurrentFrame(prevFrame => {
+          const increment = animationSpeed * (deltaTime / 16); // Adjust for actual time passed
+          const nextFrame = prevFrame + increment;
+          
+          if (nextFrame >= resultados.posicion.length) {
+            onPlayPause(); // Auto-pause when animation completes
+            return resultados.posicion.length - 1;
+          }
+          return Math.min(nextFrame, resultados.posicion.length - 1);
+        });
+        lastTime = now;
+      }
+      
+      animationRef.current = requestAnimationFrame(animate);
     };
 
-    const interval = setInterval(animate, 16); // ~60fps
-    animationRef.current = interval;
+    animationRef.current = requestAnimationFrame(animate);
 
-    return () => clearInterval(interval);
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
   }, [isPlaying, animationSpeed, resultados, onPlayPause]);
 
   const handleReset = () => {
@@ -102,11 +123,14 @@ const SpringMassSimulation = ({ resultados, isPlaying, onPlayPause, onReset, onF
             onChange={(e) => setAnimationSpeed(parseFloat(e.target.value))}
             className="text-sm border rounded px-2 py-1"
           >
-            <option value={0.25}>0.25x</option>
+            <option value={0.1}>0.1x (Muy lento)</option>
+            <option value={0.25}>0.25x (Lento)</option>
             <option value={0.5}>0.5x</option>
-            <option value={1}>1x</option>
+            <option value={1}>1x (Normal)</option>
             <option value={2}>2x</option>
             <option value={4}>4x</option>
+            <option value={8}>8x (Rápido)</option>
+            <option value={16}>16x (Muy rápido)</option>
           </select>
         </div>
       </div>

@@ -130,8 +130,8 @@ class SimulatorAPI {
     return {
       differential_eq,
       differential_eq_latex,
-      position_eq: 'Conectar al backend para ver la solución completa',
-      position_eq_latex: 'Conectar\\,al\\,backend\\,para\\,ver\\,la\\,soluci\\acute{o}n\\,completa',
+      position_eq: 'Conectar al servidor para ver la solución completa',
+      position_eq_latex: 'Conectar\\,al\\,servidor\\,para\\,ver\\,la\\,soluci\\acute{o}n\\,completa',
       velocity_eq: 'v(t) = dy/dt',
       velocity_eq_latex: 'v(t) = \\frac{dy}{dt}',
       acceleration_eq: 'a(t) = d²y/dt²',
@@ -189,7 +189,8 @@ const MathDisplay = ({ equation, label, latex }) => {
   return (
     <div className="mb-4 p-3 bg-gray-50 rounded-lg border">
       <div className="text-sm font-medium text-gray-700 mb-1">{label}</div>
-      <div className="bg-white p-3 rounded border">
+
+      <div className="bg-white p-3 rounded border max-h-40 overflow-y-auto">
         {latex ? (
           <div className="text-center">
             <BlockMath math={latex} />
@@ -405,7 +406,7 @@ export default function SimuladorMasaResorte() {
           </div>
         </div>
 
-        {/* Backend offline warning */}
+        {/* Backend offline warning 
         {backendStatus === 'offline' && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
             <div className="flex items-start">
@@ -417,7 +418,7 @@ export default function SimuladorMasaResorte() {
               <div className="ml-3">
                 <h3 className="text-sm font-medium text-red-800">Backend no disponible</h3>
                 <p className="text-sm text-red-700 mt-1">
-                  El simulador requiere conexión con el backend. Asegúrate de que el servidor Python esté ejecutándose en{' '}
+                  El simulador requiere conexión con el servidor. Asegúrate de que el servidor Python esté ejecutándose en{' '}
                   <code className="bg-red-100 px-1 rounded">{API_BASE_URL}</code>
                 </p>
                 <p className="text-xs text-red-600 mt-2">
@@ -426,7 +427,7 @@ export default function SimuladorMasaResorte() {
               </div>
             </div>
           </div>
-        )}
+        )}*/}
 
         {/* Panel de información */}
         {mostrarInfo && (
@@ -495,9 +496,8 @@ export default function SimuladorMasaResorte() {
             <div className="bg-white rounded-lg shadow-md p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Settings size={20} />
-                Parámetros del Sistema
+                Parámetros del Sistema (SI)
               </h2>
-              
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Masa (kg)</label>
@@ -568,7 +568,7 @@ export default function SimuladorMasaResorte() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Tiempo Inicial</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Tiempo Inicial (s)</label>
                     <input
                       type="number"
                       step="0.1"
@@ -578,7 +578,7 @@ export default function SimuladorMasaResorte() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Tiempo Final</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Tiempo Final (s)</label>
                     <input
                       type="number"
                       step="0.1"
@@ -591,7 +591,7 @@ export default function SimuladorMasaResorte() {
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Posición Inicial</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Posición Inicial (m)</label>
                     <input
                       type="number"
                       step="0.1"
@@ -601,7 +601,10 @@ export default function SimuladorMasaResorte() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Velocidad Inicial</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Velocidad Inicial <br />
+                      <span className="text-xs font-normal">(m/s)</span>
+                    </label>
                     <input
                       type="number"
                       step="0.1"
